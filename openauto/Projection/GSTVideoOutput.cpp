@@ -50,9 +50,8 @@ GSTVideoOutput::GSTVideoOutput(configuration::IConfiguration::Pointer configurat
 
 
     GError* error = nullptr;
-    std::string vidLaunchStr = "appsrc name=mysrc is-live=true block=false max-latency=16666 do-timestamp=true stream-type=stream ! queue ! h264parse config-interval=-1 ! capssetter caps=\"video/x-h264,colorimetry=bt709,alignment=au\" ! ";
-    //vidLaunchStr += ToPipeline(findPreferredVideoDecoder());
-    vidLaunchStr += "v4l2h264dec capture-io-mode=4";
+    std::string vidLaunchStr = "appsrc name=mysrc is-live=true block=false min-latency=0 max-latency=16666 do-timestamp=true stream-type=stream ! queue ! h264parse config-interval=-1 ! capssetter caps=\"video/x-h264,colorimetry=bt709\" ! ";
+    vidLaunchStr += ToPipeline(findPreferredVideoDecoder());
     vidLaunchStr += " ! videocrop top=0 bottom=0 name=videocropper qos=true ! capsfilter caps=video/x-raw name=mycapsfilter";
  
     vidPipeline_ = gst_parse_launch(vidLaunchStr.c_str(), &error);
